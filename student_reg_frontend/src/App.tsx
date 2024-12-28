@@ -1,20 +1,33 @@
-import './App.css'
-import StudentRegistration from '@/components/StudentRegistration'
-import { Toaster} from '@/components/ui/toaster'
-import ChapaPaymentButton from './components/ChapaPaymentButton'
-export default function App() {
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import { ThemeProvider } from "@/components/ThemeProvider"
+import Home from '@/pages/Home'
+import StudentSignUp from '@/pages/SignUp'
+import StudentSignIn from '@/pages/SignIn' 
+import AdminSignIn from '@/pages/Admin' 
+import { Toaster } from '@/components/ui/toaster'
+import StudentDashboard from './pages/StudentDashboard'; 
+
+const App: React.FC = () => {
   return (
-    <>
-    {/* <StudentRegistration /> */}
-    {/* <Toaster /> */}
-    <ChapaPaymentButton
-        amount={1000} // Amount in cents
-        currency="ETB"
-        email="customer@example.com"
-        firstName="John"
-        lastName="Doe"
-        tx_ref={`tx-${Date.now()}`} // Generate a unique transaction reference
-      />
-    </>
-  )
-}
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/student/signup" element={<StudentSignUp />} />
+          <Route path="/student/signin" element={<StudentSignIn />} />
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/admin/signin" element={<AdminSignIn />} />
+          <Route path="/admin/dashboard" element={<div>Admin Dashboard</div>} />
+          <Route path="/add-courses" element={<div>Add Courses</div>} />
+          <Route path="/view-grades" element={<div>View Grades</div>} />
+          <Route path="/make-payments" element={<div>Make Payments</div>} />
+          <Route path="*" element={<div>404 Not Found</div>} />
+        </Routes>
+      </Router>
+      <Toaster/>
+    </ThemeProvider>
+  );
+};
+
+export default App;

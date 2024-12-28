@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button' 
 
 interface ChapaPaymentButtonProps {
   amount: number
@@ -10,6 +10,7 @@ interface ChapaPaymentButtonProps {
   firstName: string
   lastName: string
   tx_ref: string
+  phoneNumber:string
 }
 
 export default function ChapaPaymentButton({
@@ -19,16 +20,18 @@ export default function ChapaPaymentButton({
   firstName,
   lastName,
   tx_ref,
+  phoneNumber
 }: ChapaPaymentButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const initializePayment = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/users/initialize-payment', {
+      const response = await fetch('/api/users/initpayment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'accept': 'application/json',
         },
         body: JSON.stringify({
           amount,
@@ -37,15 +40,16 @@ export default function ChapaPaymentButton({
           first_name: firstName,
           last_name: lastName,
           tx_ref,
+          phone_number:phoneNumber
         }),
       })
-
-      if (!response.ok) {
+      const responseData = await response.json()
+      if (!responseData.payment_url) {
         throw new Error('Payment initialization failed')
       }
 
-      const data = await response.json()
-      window.location.href = data.data.checkout_url
+      window.location.href = responseData.payment_url
+      console.log(responseData.payment_url)
     } catch (error) {
       console.error('Error initializing payment:', error)
       alert('Failed to initialize payment. Please try again.')

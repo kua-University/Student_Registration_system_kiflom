@@ -4,8 +4,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { UserPlus, User, Mail, Phone, Calendar } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ThemeToggle } from '@/components/ThemeToggle'
 
 interface StudentData {
   userName: string
@@ -20,7 +22,7 @@ interface StudentData {
   DOB: string
 }
 
-export default function StudentRegistration() {
+export default function StudentSignUp() {
   const { toast } = useToast()
   const [studentData, setStudentData] = useState<StudentData>({
     userName: '',
@@ -53,7 +55,7 @@ export default function StudentRegistration() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const response = await fetch('/api/users/register', {
+      const response = await fetch('/api1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,7 +86,18 @@ export default function StudentRegistration() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg">
+    <div className="flex flex-col min-h-screen">
+      <header className="px-4 lg:px-6 h-14 flex items-center">
+        <Link className="flex items-center justify-center" to="/">
+          Home
+          <span className="sr-only">EduPlatform</span>
+        </Link>
+        <nav className="ml-auto flex gap-4 sm:gap-6">
+          <ThemeToggle />
+        </nav>
+        </header>
+        <main className="flex-1 flex items-center justify-center">
+        <Card className="w-full max-w-md mx-auto shadow-lg">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold text-center">Join Our Campus</CardTitle>
         <CardDescription className="text-center">Enter your details to register as a student</CardDescription>
@@ -156,8 +169,7 @@ export default function StudentRegistration() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="female">Female</SelectItem> 
               </SelectContent>
             </Select>
           </div>
@@ -210,7 +222,29 @@ export default function StudentRegistration() {
           </Button>
         </form>
       </CardContent>
+      <CardFooter className="flex justify-center">
+        <p className="text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link to="/student/signin" className="text-blue-500 hover:underline">
+            Sign In
+          </Link>
+        </p>
+     </CardFooter>
     </Card>
-  )
+
+        </main>
+        <footer className="px-4 lg:px-6 h-14 flex items-center justify-between">
+        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 EduPlatform Inc. All rights reserved.</p>
+        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+          <Link className="text-xs hover:underline underline-offset-4" to="#">
+            Terms of Service
+          </Link>
+          <Link className="text-xs hover:underline underline-offset-4" to="#">
+            Privacy
+          </Link>
+        </nav>  
+        </footer>
+      </div>
+      )
 }
 
