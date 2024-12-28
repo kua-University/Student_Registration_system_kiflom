@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 import { Button } from '@/components/ui/button' 
 
@@ -27,7 +25,7 @@ export default function ChapaPaymentButton({
   const initializePayment = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/users/initpayment', {
+      const response = await fetch('/api1/users/initpayment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

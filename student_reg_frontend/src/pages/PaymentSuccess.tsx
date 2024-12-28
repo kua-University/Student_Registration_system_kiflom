@@ -1,4 +1,4 @@
-export default function PaymentSuccessPage() {
+export default function PaymentSuccess() {
     return (
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Payment Successful</h1>
@@ -6,5 +6,4 @@ export default function PaymentSuccessPage() {
       </div>
     )
   }
-  
   
