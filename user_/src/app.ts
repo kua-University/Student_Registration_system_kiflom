@@ -24,3 +24,5 @@ mongoose.connect(mongoDbUrlUser).then(()=>{
 })
 
 app.use("/users",userRouter)
+
+export default app

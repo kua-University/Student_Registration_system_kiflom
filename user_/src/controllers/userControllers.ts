@@ -129,7 +129,7 @@ try {
         phone_number,
         tx_ref,
         callback_url:`http://localhost:3000/payment-callback/${tx_ref}`,
-        return_url: 'http://localhost:5173/payment-success'
+        return_url: 'http://localhost:5173/student/payment-success'
     }
 
     const config = {
