@@ -1,7 +1,7 @@
 
 # **Software Requirements Specification (SRS)**  
 **Document Version:** 1.0  
-**Date:** 2024-03-23
+**Date:** 2025-01-02
 **Prepared by:** kiflom berihu  
 **Project Name:** Student Registration System  
 
