@@ -1,7 +1,3 @@
-Here's a refined and more structured version of your test plan with improved clarity, completeness, and readability.  
-
----
-
 # **Test Plan for School Management System**  
 **Prepared By:** Kiflom Berihu  
 
