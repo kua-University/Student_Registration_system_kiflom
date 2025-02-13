@@ -1,10 +1,39 @@
-import type * as core from '@actions/core'
-import { jest } from '@jest/globals'
+// a smaple unit test here 
+import { describe, expect, test } from '@jest/globals';
+import { RegisterUser } from '../src/register_user';
 
-export const debug = jest.fn<typeof core.debug>()
-export const error = jest.fn<typeof core.error>()
-export const info = jest.fn<typeof core.info>()
-export const getInput = jest.fn<typeof core.getInput>()
-export const setOutput = jest.fn<typeof core.setOutput>()
-export const setFailed = jest.fn<typeof core.setFailed>()
-export const warning = jest.fn<typeof core.warning>()
+describe('RegisterUser', () => {
+  test('should register a new user successfully', async () => {
+    // Arrange
+    const registerUser = new RegisterUser();
+    const userData = {
+      username: 'testuser',
+      email: 'test@example.com',
+      password: 'password123'
+    };
+
+    // Act
+    const result = await registerUser.execute(userData);
+
+    // Assert
+    expect(result).toBeDefined();
+    expect(result.success).toBe(true);
+    expect(result.user).toMatchObject({
+      username: userData.username,
+      email: userData.email
+    });
+  });
+
+  test('should fail when registering with existing email', async () => {
+    // Arrange
+    const registerUser = new RegisterUser();
+    const userData = {
+      username: 'existinguser',
+      email: 'existing@example.com',
+      password: 'password123'
+    };
+
+    // Act & Assert
+    await expect(registerUser.execute(userData)).rejects.toThrow('Email already exists');
+  });
+});

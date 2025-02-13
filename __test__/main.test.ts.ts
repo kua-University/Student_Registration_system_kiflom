@@ -1,62 +1,114 @@
-/**
- * Unit tests for the action's main functionality, src/main.ts
- *
- * To mock dependencies in ESM, you can create fixtures that export mock
- * functions and objects. For example, the core module is mocked in this test,
- * so that the actual '@actions/core' module is not imported.
- */
-import { jest } from '@jest/globals'
-import * as core from '../__fixtures__/core.js'
-import { wait } from '../__fixtures__/wait.js'
+// Instead of importing from @jest/globals, these are globally available
+// when using Jest with TypeScript
+import { Calculator } from '../src/calculator'; // Assuming you'll move the Calculator class to its own file
+import { UserRegistration } from '../src/user-registration';
 
-// Mocks should be declared before the module being tested is imported.
-jest.unstable_mockModule('@actions/core', () => core)
-jest.unstable_mockModule('../src/wait.js', () => ({ wait }))
+describe('Calculator', () => {
+    let calculator: Calculator;
 
-// The module being tested should be imported dynamically. This ensures that the
-// mocks are used in place of any actual dependencies.
-const { run } = await import('../src/main.js')
+    beforeEach(() => {
+        calculator = new Calculator();
+    });
 
-describe('main.ts', () => {
-  beforeEach(() => {
-    // Set the action's inputs as return values from core.getInput().
-    core.getInput.mockImplementation(() => '500')
+    describe('add', () => {
+        it('should add two positive numbers correctly', () => {
+            expect(calculator.add(2, 3)).toBe(5);
+        });
 
-    // Mock the wait function so that it does not actually wait.
-    wait.mockImplementation(() => Promise.resolve('done!'))
-  })
+        it('should handle negative numbers', () => {
+            expect(calculator.add(-1, -2)).toBe(-3);
+        });
+    });
 
-  afterEach(() => {
-    jest.resetAllMocks()
-  })
+    describe('subtract', () => {
+        it('should subtract two numbers correctly', () => {
+            expect(calculator.subtract(5, 3)).toBe(2);
+        });
+    });
 
-  it('Sets the time output', async () => {
-    await run()
+    describe('multiply', () => {
+        it('should multiply two numbers correctly', () => {
+            expect(calculator.multiply(4, 3)).toBe(12);
+        });
 
-    // Verify the time output was set.
-    expect(core.setOutput).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      // Simple regex to match a time string in the format HH:MM:SS.
-      expect.stringMatching(/^\d{2}:\d{2}:\d{2}/)
-    )
-  })
+        it('should handle zero', () => {
+            expect(calculator.multiply(5, 0)).toBe(0);
+        });
+    });
 
-  it('Sets a failed status', async () => {
-    // Clear the getInput mock and return an invalid value.
-    core.getInput.mockClear().mockReturnValueOnce('this is not a number')
+    describe('divide', () => {
+        it('should divide two numbers correctly', () => {
+            expect(calculator.divide(6, 2)).toBe(3);
+        });
 
-    // Clear the wait mock and return a rejected promise.
-    wait
-      .mockClear()
-      .mockRejectedValueOnce(new Error('milliseconds is not a number'))
+        it('should throw error when dividing by zero', () => {
+            expect(() => calculator.divide(5, 0)).toThrow('Division by zero is not allowed');
+        });
+    });
+});
 
-    await run()
+describe('UserRegistration', () => {
+    let userRegistration: UserRegistration;
 
-    // Verify that the action was marked as failed.
-    expect(core.setFailed).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds is not a number'
-    )
-  })
-})
+    beforeEach(() => {
+        userRegistration = new UserRegistration();
+    });
+
+    describe('registerUser', () => {
+        it('should successfully register a valid user', () => {
+            const user = {
+                username: 'johndoe',
+                email: 'john@example.com',
+                password: 'Password123!'
+            };
+
+            const result = userRegistration.register(user);
+            expect(result.success).toBe(true);
+            expect(result.user).toMatchObject({
+                username: user.username,
+                email: user.email
+            });
+        });
+
+        it('should reject registration with invalid email', () => {
+            const user = {
+                username: 'johndoe',
+                email: 'invalid-email',
+                password: 'Password123!'
+            };
+
+            expect(() => userRegistration.register(user))
+                .toThrow('Invalid email format');
+        });
+
+        it('should reject registration with weak password', () => {
+            const user = {
+                username: 'johndoe',
+                email: 'john@example.com',
+                password: '123'  // too short
+            };
+
+            expect(() => userRegistration.register(user))
+                .toThrow('Password must be at least 8 characters');
+        });
+
+        it('should not allow duplicate usernames', () => {
+            const user1 = {
+                username: 'johndoe',
+                email: 'john@example.com',
+                password: 'Password123!'
+            };
+
+            userRegistration.register(user1);
+
+            const user2 = {
+                username: 'johndoe',  // same username
+                email: 'john2@example.com',
+                password: 'Password123!'
+            };
+
+            expect(() => userRegistration.register(user2))
+                .toThrow('Username already exists');
+        });
+    });
+});
