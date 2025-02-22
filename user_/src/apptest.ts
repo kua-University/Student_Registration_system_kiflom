@@ -11,16 +11,6 @@ const mongoDbUrlUser = process.env.MONGODB_CONNECT_STRING_USER as string;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
-  mongoose.connect(mongoDbUrlUser).then(()=>{
-    console.log("users database connected")
-      app.listen(port,()=>{
-        console.log(`server running on port ${port}`)
-      })
-    }).catch((error)=>{
-    console.log("Error while connecting to users database")
-    process.exit(1)
-  })
 app.use("/users",userRouter)
 
 export default app

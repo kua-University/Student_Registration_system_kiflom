@@ -9,6 +9,9 @@ import {
     
 const userRouter = Router()
 
+userRouter.get('/',(req,res)=>{
+    res.send("Hello, world!")
+})
 userRouter.get('/all',getUsers)
 userRouter.post('/register',createUser)
 userRouter.post('/initpayment', initPayment)

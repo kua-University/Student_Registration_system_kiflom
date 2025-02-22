@@ -6,7 +6,7 @@ import axios from "axios"
 //creates a brand new user
 export const createUser = async (req: Request<IUser>, res: Response)=>{
     try{ 
-      const {userName,password} = req.body
+      const {userName} = req.body
       const usrexist = await userModel.findOne({userName})
     if(usrexist){
         res.status(400).json({userAlreadyExists:true})
